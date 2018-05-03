@@ -1,19 +1,21 @@
 import fetch from 'isomorphic-fetch';
 import { stringify } from 'querystring';
-import { isEmpty, omit, values, has, map, uniq } from '../utils/lodash';
-import { SET_FORM_OPTIONS } from 'constants';
+import { compact, isEmpty, omit, values, has, map, uniq } from '../utils/lodash';
+import { SET_FORM_OPTIONS } from '../constants';
 import config from '../config.js';
 import { receiveFailure } from './results.js';
 
 const { i94_url, i92_url, spending_data_url, siat_url, apiKey } = config.api;
 
 export function setFormOptions(countries_array, world_regions_array){
-  let countries = map(countries_array, val => { 
-    return optionObject(val);
-  });
-  let world_regions = map(world_regions_array, val => { 
-    return optionObject(val); 
-  });
+  let countries = compact(map(countries_array, val => { 
+    if (val != "")
+      return optionObject(val);
+  }));
+  let world_regions = compact(map(world_regions_array, val => { 
+    if (val != "")
+      return optionObject(val); 
+  }));
 
   return {
     type: SET_FORM_OPTIONS,
